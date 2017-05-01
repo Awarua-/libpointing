@@ -186,6 +186,10 @@ namespace pointing
       {
       case GIDC_ARRIVAL:
       {
+		  //FIXME Take the first connected device as the trackpad
+		  if (self->likelyTrackpad == NULL) {
+			  self->likelyTrackpad = lParam;
+		  }
           PointingDeviceDescriptor desc;
           if (self->fillDescriptorInfo((HANDLE)lParam, desc))
           {
@@ -226,6 +230,10 @@ namespace pointing
       if (raw->header.dwType == RIM_TYPEMOUSE)
       {
         //std::cout << "Input frame  from: " << std::hex << raw->header.hDevice << std::endl;
+		  if ((HANDLE) raw->header.hDevice == (HANDLE) 0)
+		  {
+			  raw->header.hDevice = (HANDLE) self->likelyTrackpad;
+		  }
         auto it = self->devMap.find(raw->header.hDevice);
         if(it != self->devMap.end())
         {

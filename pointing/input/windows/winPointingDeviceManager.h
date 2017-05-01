@@ -40,6 +40,7 @@ namespace pointing
         HANDLE hThreads[1];
         DWORD dwThreadId;
         static DWORD WINAPI Loop(LPVOID lpvThreadParam);
+        LPARAM likelyTrackpad;
         void processMessage(MSG *msg);
         HWND msghwnd_;
 
