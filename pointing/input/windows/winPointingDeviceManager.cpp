@@ -186,14 +186,15 @@ namespace pointing
       {
       case GIDC_ARRIVAL:
       {
-		  //FIXME Take the first connected device as the trackpad
-		  if (self->likelyTrackpad == NULL) {
-			  self->likelyTrackpad = lParam;
-		  }
           PointingDeviceDescriptor desc;
           if (self->fillDescriptorInfo((HANDLE)lParam, desc))
           {
               PointingDeviceData *pdd = new PointingDeviceData;
+			  //FIXME Assuemes the last APCI device connected is a trackpad
+			  if (desc.product.find("Trackpad") != std::string::npos)
+			  {
+				  self->likelyTrackpad = lParam;
+			  }
               pdd->desc = desc;
               self->registerDevice((HANDLE)lParam, pdd);
           }
@@ -229,7 +230,6 @@ namespace pointing
       RAWINPUT* raw = (RAWINPUT*)lpb;
       if (raw->header.dwType == RIM_TYPEMOUSE)
       {
-        //std::cout << "Input frame  from: " << std::hex << raw->header.hDevice << std::endl;
 		  if ((HANDLE) raw->header.hDevice == (HANDLE) 0)
 		  {
 			  raw->header.hDevice = (HANDLE) self->likelyTrackpad;
